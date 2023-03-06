@@ -3,8 +3,8 @@ from hashlib import sha256
 from datetime import datetime
 from flask import Flask, request
 import requests
-import rsa
 import json
+import random
 
 def getTime():
     now = datetime.now()
@@ -13,6 +13,13 @@ def getTime():
 
 def getHash(data):
     return sha256(data.encode()).hexdigest()
+
+def verify(key, ran, publickey):
+    pk = getHash(str(ran) + str(key))
+    if(pk == str(publickey)):
+        return True
+    else:
+        return False
 
 class blockchain:   
     def __init__(self):    
@@ -26,7 +33,7 @@ class blockchain:
         return self.chain[-1].hash
 
     def getMapHash(self):
-        mapHash = getHash(str(self.NametoIpmap))
+        mapHash = getHash(str(self.NametoIpmap) + str(self.NametoOwnermap))
         return mapHash
 
     def checkVaild(self):
@@ -37,21 +44,35 @@ class blockchain:
         newBlock = block(len(self.chain), self.getPreviousHash(), getTime(), self.getMapHash())
         self.chain.append(newBlock)
 
-    def addNewBinding(self, domainName, ip, owner):
-        assert self.NametoIpmap.get(getHash(domainName), 'not exist') == 'not exist', 'Domain Name used'
-        self.NametoIpmap[getHash(domainName)] = str(ip)
-        self.NametoOwnermap[getHash(domainName)] = getHash(owner)
-        self.addNewBlock()
+    def addNewBinding(self, domainName, ip, owner, key, ran):
+        if (verify(key, ran, owner)):
+            if (self.NametoIpmap.get(getHash(domainName), 'not exist') != 'not exist'):
+                return 'Domain Name used'
+            self.NametoIpmap[getHash(domainName)] = str(ip)
+            self.NametoOwnermap[getHash(domainName)] = getHash(owner)
+            self.addNewBlock()
+            return 'Successfully added'
+        else:
+            return 'incorrect key or account'
 
-    def changeBinding(self, domainName, Newip, owner):
-        assert self.NametoOwnermap.get(getHash(domainName), 'not exist') != 'not exist', 'Domain Name not exist'
-        assert self.NametoOwnermap.get(getHash(domainName), 'not exist') == getHash(owner), 'Invaild user'
-        self.NametoIpmap[getHash(domainName)] = str(Newip)
-        self.addNewBlock()
+    def changeBinding(self, domainName, Newip, owner, key, ran):
+        if (verify(key, ran, owner)):
+            if (self.NametoOwnermap.get(getHash(domainName), 'not exist') == 'not exist'):
+                return 'Domain Name not exist'
+            if (self.NametoOwnermap.get(getHash(domainName), 'not exist') != getHash(owner)):
+                return 'invaild user'
+            self.NametoIpmap[getHash(domainName)] = str(Newip)
+            self.addNewBlock()
+            return 'Successfully changed'
+        else:
+            return 'incorrect key or account'
+        
 
     def queryBinding(self, domainName):
-        assert self.checkVaild, 'Invaild blockchain log'
-        assert self.NametoIpmap.get(getHash(domainName), 'not exist') != 'not exist', 'Corresponding IP address not exist'
+        if (self.checkVaild == False):
+            return 'invaild blockchain log'
+        if (self.NametoIpmap.get(getHash(domainName), 'not exist') == 'not exist'):
+            return 'Corresponding IP address not exist'
         return self.NametoIpmap[getHash(domainName)]
 
     def showBlock(self, index):
@@ -83,23 +104,12 @@ class block:
         self.hash = sha256(json.dumps(self.blockjson).encode()).hexdigest()
 
 class account:
-    def __init__(self):
-        (publickey, privatekey) = rsa.newkeys(512)
-        self.privateKey = privatekey
-        self.publicKey = publickey
+    def __init__(self, key):
+        ran = random.randint(1,1000000000)
+        publickey = getHash(str(ran) + str(key))
+        self.key = key
+        self.ran = ran
+        self.publickey = publickey
 
-    def encrypt(self, text):
-        cipher = rsa.encrypt(bytes(text, encoding='utf-8'), self.publicKey)
-        return cipher
-
-    def decrypt(self, encrypt_text):
-        plain = rsa.decrypt(encrypt_text, self.privateKey)
-        return str(plain, encoding = "utf-8")
-
-    def sign(self, hash):
-        signature = rsa.sign(bytes(hash, encoding='utf-8'), self.privateKey, 'SHA-256')
-        return signature
-
-    def verify(self, signature, hash):
-        method = rsa.verify(bytes(hash, encoding='utf-8'), signature, self.publicKey)
-        return method == 'SHA-256'
+    def getKey(self):
+        return self.key, self.ran, self.publickey

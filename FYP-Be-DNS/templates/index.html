@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- basic -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- mobile metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <!-- site metas -->
+    <title>Be-DNS/Home</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- bootstrap css -->
+    <link rel="stylesheet" href="{{url_for('static',filename='css/bootstrap.min.css')}}">
+    <!-- style css -->
+    <link rel="stylesheet" href="{{url_for('static',filename='css/style.css')}}">
+    <!-- responsive-->
+    <link rel="stylesheet" href="{{url_for('static',filename='css/responsive.css')}}">
+    <!-- awesome fontfamily -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
+</head>
+<!-- body -->
+
+<body class="main-layout">
+    <!-- loader  -->
+    <!-- <div class="loader_bg">
+        <div class="loader"><img src="images/loading.gif" alt="" /></div>
+    </div> -->
+    <!-- end loader -->
+    <div id="mySidepanel" class="sidepanel">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+        <a class="active" href="../">Home</a>
+        <a href="account">Get Account</a>
+        <a href="query">Query</a>
+        <a href="add&change">Add & Change</a>
+        <a href="chain&node">Chain & Node</a>
+    </div>
+    <!-- header -->
+    <header>
+        <!-- header inner -->
+        <div class="head-top">
+            <div class="container-fluid">
+                <div class="row d_flex">
+                    <div class="col-sm-3">
+                        <div class="logo">
+                            <a href="../">Be-DNS</a>
+                        </div>
+                    </div>
+                    <div class="col-sm-5">
+                        <ul class="social_icon text_align_right d_none">
+                        </ul>
+                    </div>
+                    <div class="col-sm-4">
+                        <ul class="email text_align_right">
+                            <li class="d_none"><a href="account"><i class="fa fa-user" aria-hidden="true"></i></a></li>
+                            <li class="d_none"> <a href="query"><i class="fa fa-search" style="cursor: pointer;" aria-hidden="true"></i></a> </li>
+                            <li> <a href="https://github.com/xiaoZ857/FYP-Be-DNS"><i class="fa fa-github"></i></a></li>
+                            <li>
+                                <button class="openbtn" onclick="openNav()"><img src="{{url_for('static',filename='images/menu_btn.png')}}"></button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- end header -->
+    <!-- start slider section -->
+    <div id="top_section" class=" banner_main">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <div id="myCarousel" class="carousel slide" data-ride="carousel">
+                        <ol class="carousel-indicators">
+                            <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                        </ol>
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <div class="container-fluid">
+                                    <div class="carousel-caption relative">
+                                        <div class="row d_flex">
+                                            <div class="col-md-6">
+                                                <div class="con_img">
+                                                    <figure><img class="img_responsive" src="{{url_for('static',filename='images/top_img.png')}}" alt="#" /></figure>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="bluid">
+                                                    <h1>Blockchain-enabled Domain Name System</h1>
+                                                    <p>A Blockchain-enabled Domain Name System for private enterprise networks.
+                                                    </p>
+                                                    <a class="read_more" href="account">Get Account</a><a class="read_more" href="query">Query</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end slider section -->
+    <!-- wallet -->
+    <div class="wallet">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-3 col-sm-6">
+                    <div id="wa_hover" class="wallet_box text_align_center">
+                        <i><img src="{{url_for('static',filename='images/wa1.svg')}}" alt="#"/></i>
+                        <h3>Immutability</h3>
+                        <p>Unchangeable data for enhanced security</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6">
+                    <div id="wa_hover" class="wallet_box text_align_center">
+                        <i><img src="{{url_for('static',filename='images/wa2.svg')}}" alt="#"/></i>
+                        <h3>Decentralization</h3>
+                        <p>Resilient and reliable without a single point of failure</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6">
+                    <div id="wa_hover" class="wallet_box text_align_center">
+                        <i><img src="{{url_for('static',filename='images/wa3.svg')}}" alt="#"/></i>
+                        <h3>Transparency</h3>
+                        <p>Open and verifiable transactions for greater trust</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6">
+                    <div id="wa_hover" class="wallet_box text_align_center">
+                        <i><img src="{{url_for('static',filename='images/wa4.svg')}}" alt="#"/></i>
+                        <h3>Anonymity</h3>
+                        <p>Protects user privacy with anonymous transactions</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end wallet -->
+    <!-- footer -->
+    <footer>
+        <div class="footer">
+            <div class="copyright text_align_center ">
+               <div class="container ">
+                  <div class="row ">
+                     <div class="col-md-12 ">
+                        <p>Blockchain-enabled Domain Name System | Final Year Project by Zhou Zihan</a></p>
+                        <ul>
+                            <li> <a href="https://www.gla.uestc.edu.cn/"> <i class="fa fa-map-marker " aria-hidden="true "></i>Glasgow College, UESTC
+                               </a>
+                            </li>
+                            <li> <a href="mailto:2510791Z@student.gla.ac.uk"> <i class="fa fa-envelope " aria-hidden="true "></i>2510791Z@student.gla.ac.uk
+                               </a>
+                            </li>
+                         </ul>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      </footer>
+      <!-- end footer -->
+      <!-- Javascript files-->
+      <script src="{{url_for('static',filename='js/jquery.min.js')}}"></script>
+      <script src="{{url_for('static',filename='js/bootstrap.bundle.min.js')}}"></script>
+      <script src="{{url_for('static',filename='js/jquery-3.0.0.min.js')}}"></script>
+      <script src="{{url_for('static',filename='js/custom.js')}}"></script>
+   </body>
+</html>
