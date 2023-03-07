@@ -70,6 +70,41 @@
         </div>
     </header>
     <!-- end header -->
+    <div id="about" class="about">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="about_border">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="titlepage text_align_left">
+                                    <h2>Query</h2>
+                                </div>
+                                <div class="about_text">
+                                    <p>Enter the domain name to get corresponding IP address.</div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="about_img">
+                                    <figure><img class="img_responsive" src="{{url_for('static',filename='images/about2.png')}}" alt="#" /></figure>
+                                </div>
+                            </div>
+                            <form action="/search" method="post">
+                                <div class="col-md-12">
+                                    <h2>IP address : {{var1}}</h2>
+                                </div>
+                                <div class="col-md-12 ">
+                                    <input class="about_squre" placeholder="Domain Name" type="text" name="domain">
+                                </div>
+                                <div class="col-md-12">
+                                    <button class="about_btn" type="submit">Search</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- footer -->
     <footer>
         <div class="footer">

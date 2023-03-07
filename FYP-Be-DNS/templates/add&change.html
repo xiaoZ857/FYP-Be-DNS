@@ -70,6 +70,70 @@
         </div>
     </header>
     <!-- end header -->
+    <div id="about" class="about">
+        <div class="container">
+            <div class="col-md-12">
+                <div class="about_border">
+                    <div class="titlepage text_align_center">
+                        <h2>Add new binding</h2>
+                    </div>
+                    <form action="/add" method="post">
+                        <div class="col-md-6 ">
+                            <input class="about_squre" placeholder="Domain Name" type="type" name="domain">
+                        </div>
+                        <div class="col-md-6">
+                            <input class="about_squre" placeholder="IP address" type="type" name="ip">
+                        </div>
+                        <div class="col-md-6">
+                            <input class="about_squre" placeholder="Account" type="type" name="owner">
+                        </div>
+                        <div class="col-md-3">
+                            <input class="about_squre" placeholder="Key" type="type" name="key">
+                        </div>
+                        <div class="col-md-3">
+                            <input class="about_squre" placeholder="Random Number" type="type" name="ran">
+                        </div>
+                        <div class="col-md-12">
+                            <button class="about_btn" type="submit">Add</button>
+                            <h3>{{var1}}</h3>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="about" class="about">
+        <div class="container">
+            <div class="col-md-12">
+                <div class="about_border">
+                    <div class="titlepage text_align_center">
+                        <h2>Change binding</h2>
+                    </div>
+                    <form action="/change" method="post">
+                        <div class="col-md-6 ">
+                            <input class="about_squre" placeholder="Domain Name" type="type" name="newdomain">
+                        </div>
+                        <div class="col-md-6">
+                            <input class="about_squre" placeholder="IP address" type="type" name="newip">
+                        </div>
+                        <div class="col-md-6">
+                            <input class="about_squre" placeholder="Account" type="type" name="newowner">
+                        </div>
+                        <div class="col-md-3">
+                            <input class="about_squre" placeholder="Key" type="type" name="newkey">
+                        </div>
+                        <div class="col-md-3">
+                            <input class="about_squre" placeholder="Random Number" type="type" name="newran">
+                        </div>
+                        <div class="col-md-12">
+                            <button class="about_btn" type="submit">Change</button>
+                            <h3>{{var2}}</h3>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- footer -->
     <footer>
         <div class="footer">

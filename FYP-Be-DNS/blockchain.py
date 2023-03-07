@@ -1,8 +1,6 @@
 from dataclasses import dataclass
 from hashlib import sha256
 from datetime import datetime
-from flask import Flask, request
-import requests
 import json
 import random
 

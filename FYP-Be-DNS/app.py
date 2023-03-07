@@ -8,7 +8,6 @@ chainA = blockchain()
 def Index():
     return render_template("index.html")
 
-
 @app.route('/query', methods=['GET'])
 def Query():
     return render_template("query.html")
@@ -37,6 +36,41 @@ def createAccount():
         ran = accountcreated.ran
         message = 'Account created successfully'
         return render_template("account.html", var1=address, var2=ran, var3=key, var4=message)
+
+@app.route('/add', methods=['POST'])
+def add():
+    domain = request.form['domain']
+    ip = request.form['ip']
+    owner = request.form['owner']
+    key = request.form['key']
+    ran = request.form['ran']
+    if((domain == '')|(ip == '')|(owner == '')|(key == '')|(ran == '')):
+        message = 'Please enter the information'
+        return render_template("add&change.html", var1 = message)
+    else:
+        message = chainA.addNewBinding(domain, ip, owner, key, ran)
+        return render_template("add&change.html", var1 = message)
+
+@app.route('/change', methods=['POST'])
+def change():
+    domain = request.form['newdomain']
+    newip = request.form['newip']
+    owner = request.form['newowner']
+    key = request.form['newkey']
+    ran = request.form['newran']
+    if((domain == '')|(newip == '')|(owner == '')|(key == '')|(ran == '')):
+        message = 'Please enter the information'
+        return render_template("add&change.html", var2 = message)
+    else:
+        message = chainA.changeBinding(domain, newip, owner, key, ran)
+        return render_template("add&change.html", var2 = message)
+
+@app.route('/search', methods=['POST'])
+def search():
+    domain = request.form['domain']
+    ip = chainA.queryBinding(domain)
+    return render_template("query.html", var1 = ip)
+
 
 
 if __name__=="__main__":
