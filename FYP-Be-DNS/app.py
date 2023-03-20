@@ -1,8 +1,9 @@
-from flask import Flask, render_template, request, url_for
+from flask import Flask, render_template, request, url_for, jsonify
 from blockchain import*
 
 app = Flask(__name__, template_folder = 'templates',static_folder='static',static_url_path='')
-chainA = blockchain()
+selfChain = blockchain()
+selfNode = node(selfChain)
 
 @app.route('/', methods=['GET'])
 def Index():
@@ -48,7 +49,10 @@ def add():
         message = 'Please enter the information'
         return render_template("add&change.html", var1 = message)
     else:
-        message = chainA.addNewBinding(domain, ip, owner, key, ran)
+        message = selfChain.addNewBinding(domain, ip, owner, key, ran)
+        if message is 'Successfully added':
+            
+
         return render_template("add&change.html", var1 = message)
 
 @app.route('/change', methods=['POST'])
@@ -62,16 +66,103 @@ def change():
         message = 'Please enter the information'
         return render_template("add&change.html", var2 = message)
     else:
-        message = chainA.changeBinding(domain, newip, owner, key, ran)
+        message = selfChain.changeBinding(domain, newip, owner, key, ran)
         return render_template("add&change.html", var2 = message)
 
 @app.route('/search', methods=['POST'])
 def search():
     domain = request.form['domain']
-    ip = chainA.queryBinding(domain)
+    ip = selfChain.queryBinding(domain)
     return render_template("query.html", var1 = ip)
 
+@app.route('/vote_request', methods=['POST'])
+def vote_request():
+    data = request.get_json()
+    term = data['term']
+    url = data['url']
+    if url is not selfNode.url:
+        if selfNode.voted is False:
+            if term > selfNode.term :
+                response = {
+                    'term': term,
+                    'vote': 'yes'
+                }
+                selfNode.term = term
+                selfNode.syncer = url
+                selfNode.voted = True
+                selfNode.votes_received = 0
+                selfNode.state = 'follower'
+                return jsonify(response), 200
+            else :
+                response = {
+                    'term': selfNode.term,
+                    'vote': 'no'
+                }
+                return jsonify(response), 200
+        if selfNode.voted is True:
+            response = {
+                    'term': selfNode.term,
+                    'vote': 'no'
+                }
+            return jsonify(response), 200
+
+@app.route('/receive_heartbeat', methods=['POST'])
+def receive_heartbeat():
+    data = request.get_json()
+    height = data['height']
+    hash = data['hash']
+    term = data['term']
+    url = data['url']
+    height_check = (height == len(selfChain.chain))
+    hash_check = (hash == selfChain.getMapHash)
+    term_check = (term == selfNode.term)
+    if url is not selfNode.url:
+        if url == selfNode.syncer:
+            if (height_check and hash_check and term_check):
+                response = {
+                    'heart': 'correct'
+                }
+                selfNode.received = True
+                return jsonify(response), 200
+            else:
+                response = {
+                    'heart': 'incorrect'
+                }
+                selfNode.received = True
+                selfNode.recover()
+                return jsonify(response), 200
+
+@app.route('/get_chain', methods=['GET'])
+def get_chain():
+    response = {
+            'chain': selfChain.chain,
+            'NametoIpmap': selfChain.NametoIpmap,
+            'NametoOwnermap': selfChain.NametoOwnermap,
+        }
+    return jsonify(response), 200
 
 
-if __name__=="__main__":
-    app.run(port=2020,host="127.0.0.1",debug=True)
+@app.route('/receive_block', methods=['POST'])
+def receive_block():
+    data = request.get_json()
+    index = data['index']
+    previousHash = data['previousHash']
+    timestamp = data['timestamp']
+    mapHash = data['mapHash']
+    hash = data['hash']
+    newNametoIpmap = data['newNametoIpmap']
+    newNametoOwnermap = data['newNametoOwnermap']
+    
+    response = 'Block received'
+    return response, 200
+
+
+
+
+
+
+
+
+
+# if __name__=="__main__":
+#     app.run(port=2020,host="127.0.0.1",debug=True)
