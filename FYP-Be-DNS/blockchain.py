@@ -24,7 +24,7 @@ class blockchain:
         self.chain = []
         self.NametoIpmap = {}
         self.NametoOwnermap = {}
-        genesisBlock = block(0, 0x0, getTime(), 0x0)
+        genesisBlock = block(0, 0x0, "hello world", 0x0)
         self.chain.append(genesisBlock)
 
     def getPreviousHash(self):
