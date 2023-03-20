@@ -51,7 +51,8 @@ def add():
     else:
         message = selfChain.addNewBinding(domain, ip, owner, key, ran)
         if message is 'Successfully added':
-            
+            # need to add
+            pass
 
         return render_template("add&change.html", var1 = message)
 
