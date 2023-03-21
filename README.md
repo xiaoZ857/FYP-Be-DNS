@@ -33,9 +33,7 @@ git clone https://github.com/xiaoZ857/FYP-Be-DNS.git
 
 2. Use the provided API endpoints to interact with the blockchain network, such as adding new bindings or querying existing bindings.
 
-3. Monitor the network through the `getData()` method to check the current leader, the height of the blockchain, and the list of nodes.
-
-4. Use the HTML to interact with the network.
+3. Use the HTML to interact with the network.
 
 
 ## License
