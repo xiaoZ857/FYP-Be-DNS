@@ -4,8 +4,8 @@ from blockchain import*
 app = Flask(__name__, template_folder = 'templates',static_folder='static',static_url_path='')
 
 selfChain = blockchain()
-host = app.config['host']
-port = app.config['port']
+host = '127.0.0.1'
+port = 500
 ip = f'{host}:{port}'
 selfNode = node(selfChain, ip)
 
@@ -149,7 +149,7 @@ def get_chain():
             'NametoIpmap': selfChain.NametoIpmap,
             'NametoOwnermap': selfChain.NametoOwnermap,
         }
-    return jsonify(response), 200
+    return response, 200
 
 
 @app.route('/receive_block', methods=['POST'])

@@ -123,13 +123,13 @@ class node:
         self.votes_received = 0
         self.received = True
         self.majority = ((len(self.nodes) - 1) // 2)
-        self.timeout = random.uniform(5, 10)
+        self.timeout = random.uniform(1, 5)
         self.timer = threading.Timer(self.timeout, self.runtime)
         self.timer.start()
 
 
     def runtime(self):
-        time.sleep(10)
+        time.sleep(5)
         while True:
             if self.state == 'candidate':
                 self.start_election()
@@ -147,6 +147,8 @@ class node:
             'url':self.url,
         }
         for node in self.nodes:
+            if node == self.url:
+                continue
             response = requests.post(f'http://{node}/vote_request', json=election)
             if response.status_code == 200:
                 if response.json()['vote'] == 'yes':
@@ -170,6 +172,8 @@ class node:
                 'url':self.url
             }
             for node in self.nodes:
+                if node == self.url:
+                    continue
                 response = requests.post(f'http://{node}/receive_heartbeat', data=leader)
                 if response.status_code == 200:
                     heart_received += 1
@@ -181,9 +185,9 @@ class node:
     def recover(self):
         response = requests.get(f'http://{self.leader}/get_chain')
         if response.status_code == 200:
-            self.blockchain.chain = response.json()['chain']
-            self.blockchain.NametoIpmap = response.json()['NametoIpmap']
-            self.blockchain.NametoOwnermap = response.json()['NametoOwnermap']
+            self.blockchain.chain = response['chain']
+            self.blockchain.NametoIpmap = response['NametoIpmap']
+            self.blockchain.NametoOwnermap = response['NametoOwnermap']
 
     def follower(self):
         self.voted = False
@@ -208,6 +212,8 @@ class node:
             'newNametoOwnermap':newNametoOwnermap,
         }
         for node in self.nodes:
+            if node == self.url:
+                continue
             response = requests.post(f'http://{node}/receive_block', data=data)
 
     def getData(self):
