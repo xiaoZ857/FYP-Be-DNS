@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 from hashlib import sha256
 from datetime import datetime
-import json
 import random
 import threading
 import time
@@ -130,7 +129,7 @@ class node:
 
 
     def runtime(self):
-        time.sleep(60)
+        time.sleep(10)
         while True:
             if self.state == 'candidate':
                 self.start_election()
@@ -171,7 +170,7 @@ class node:
                 'url':self.url
             }
             for node in self.nodes:
-                response = requests.post(f'http://{node}/receive_heartbeat', json=leader)
+                response = requests.post(f'http://{node}/receive_heartbeat', data=leader)
                 if response.status_code == 200:
                     heart_received += 1
 
@@ -189,9 +188,9 @@ class node:
     def follower(self):
         self.voted = False
         while True:
-            self.received is False
+            self.received == False
             time.sleep(10+random.uniform(1, 2))
-            if self.received is False:
+            if self.received == False:
                 self.state = 'candidate'
 
     def broadcast_block(self):
@@ -209,10 +208,10 @@ class node:
             'newNametoOwnermap':newNametoOwnermap,
         }
         for node in self.nodes:
-            response = requests.post(f'http://{node}/receive_block', json=data)
+            response = requests.post(f'http://{node}/receive_block', data=data)
 
     def getData(self):
-        if self.leader is not None:
+        if self.leader != None:
             data = {
                 'leader': self.leader,
                 'height':len(self.blockchain.chain),
