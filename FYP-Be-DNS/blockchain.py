@@ -7,6 +7,8 @@ import threading
 import time
 import requests
 
+NODES = ['127.0.0.1:5000','127.0.0.1:5001','127.0.0.1:5002','127.0.0.1:5003','127.0.0.1:5004']
+
 def getTime():
     now = datetime.now()
     time = now.strftime("%Y-%m-%d, %H:%M:%S")
@@ -113,25 +115,26 @@ class account:
 class node:
     def __init__(self, blockchain, url):
         self.term = 0
-        self.nodes = set()
+        self.nodes = NODES
         self.blockchain = blockchain
-        self.syncer = None
+        self.leader = None
         self.state = 'candidate'
         self.url = url
         self.voted = False
         self.votes_received = 0
         self.received = True
         self.majority = ((len(self.nodes) - 1) // 2)
-        self.syncer_timeout = random.uniform(1, 5)
-        self.timer = threading.Timer(self.syncer_timeout, self.runtime)
+        self.timeout = random.uniform(5, 10)
+        self.timer = threading.Timer(self.timeout, self.runtime)
         self.timer.start()
 
 
     def runtime(self):
+        time.sleep(60)
         while True:
             if self.state == 'candidate':
                 self.start_election()
-            elif self.state == 'syncer':
+            elif self.state == 'leader':
                 self.send_heartbeat()
             elif self.state == 'follower':
                 self.follower()
@@ -151,24 +154,24 @@ class node:
                     self.votes_received += 1
 
         if self.votes_received >= self.majority:
-            self.syncer = self.url
-            self.state = 'syncer'
+            self.leader = self.url
+            self.state = 'leader'
         else:
             self.state = 'follower'
             
 
     def send_heartbeat(self):
-        while self.state == 'syncer':
+        while self.state == 'leader':
             heart_received = 0
             time.sleep(5+random.uniform(1, 2))
-            syncer = {
+            leader = {
                 'height': len(self.blockchain.chain),
                 'hash': self.blockchain.getMapHash,
                 'term': self.term,
                 'url':self.url
             }
             for node in self.nodes:
-                response = requests.post(f'http://{node}/receive_heartbeat', json=syncer)
+                response = requests.post(f'http://{node}/receive_heartbeat', json=leader)
                 if response.status_code == 200:
                     heart_received += 1
 
@@ -177,7 +180,7 @@ class node:
 
 
     def recover(self):
-        response = requests.get(f'http://{self.syncer}/get_chain')
+        response = requests.get(f'http://{self.leader}/get_chain')
         if response.status_code == 200:
             self.blockchain.chain = response.json()['chain']
             self.blockchain.NametoIpmap = response.json()['NametoIpmap']
@@ -196,6 +199,7 @@ class node:
         newNametoIpmap = self.blockchain.NametoIpmap
         newNametoOwnermap = self.blockchain.NametoOwnermap
         data = {
+            'url':self.url,
             'index':newblock.index,
             'previousHash':newblock.previousHash,
             'timestamp':newblock.timestamp,
@@ -206,3 +210,18 @@ class node:
         }
         for node in self.nodes:
             response = requests.post(f'http://{node}/receive_block', json=data)
+
+    def getData(self):
+        if self.leader is not None:
+            data = {
+                'leader': self.leader,
+                'height':len(self.blockchain.chain),
+                'nodes':self.nodes,
+            }
+        else:
+            data = {
+                'leader': 'in election',
+                'height':len(self.blockchain.chain),
+                'nodes':self.nodes,
+            }
+        return data

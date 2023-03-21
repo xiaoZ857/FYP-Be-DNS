@@ -3,7 +3,7 @@ from blockchain import*
 
 app = Flask(__name__, template_folder = 'templates',static_folder='static',static_url_path='')
 selfChain = blockchain()
-selfNode = node(selfChain)
+selfNode = node(selfChain, '127.0.0.1:5000')
 
 @app.route('/', methods=['GET'])
 def Index():
@@ -23,7 +23,11 @@ def add_change():
 
 @app.route('/chain&node', methods=['GET'])
 def chain_node():
-    return render_template("chain&node.html")
+    data = selfNode.getData()
+    leader = data['leader']
+    height = data['height']
+    nodes = data['nodes']
+    return render_template("chain&node.html", var1=leader, var2 = height, var3 = nodes)
 
 @app.route('/create', methods=['POST'])
 def createAccount():
@@ -50,10 +54,8 @@ def add():
         return render_template("add&change.html", var1 = message)
     else:
         message = selfChain.addNewBinding(domain, ip, owner, key, ran)
-        if message is 'Successfully added':
-            # need to add
-            pass
-
+        if message == 'Successfully added':
+            selfNode.broadcast_block()
         return render_template("add&change.html", var1 = message)
 
 @app.route('/change', methods=['POST'])
@@ -68,6 +70,8 @@ def change():
         return render_template("add&change.html", var2 = message)
     else:
         message = selfChain.changeBinding(domain, newip, owner, key, ran)
+        if message == 'Successfully changed':
+            selfNode.broadcast_block()
         return render_template("add&change.html", var2 = message)
 
 @app.route('/search', methods=['POST'])
@@ -89,7 +93,7 @@ def vote_request():
                     'vote': 'yes'
                 }
                 selfNode.term = term
-                selfNode.syncer = url
+                selfNode.leader = url
                 selfNode.voted = True
                 selfNode.votes_received = 0
                 selfNode.state = 'follower'
@@ -118,7 +122,7 @@ def receive_heartbeat():
     hash_check = (hash == selfChain.getMapHash)
     term_check = (term == selfNode.term)
     if url is not selfNode.url:
-        if url == selfNode.syncer:
+        if url == selfNode.leader:
             if (height_check and hash_check and term_check):
                 response = {
                     'heart': 'correct'
@@ -146,6 +150,7 @@ def get_chain():
 @app.route('/receive_block', methods=['POST'])
 def receive_block():
     data = request.get_json()
+    url = data['url']
     index = data['index']
     previousHash = data['previousHash']
     timestamp = data['timestamp']
@@ -153,17 +158,13 @@ def receive_block():
     hash = data['hash']
     newNametoIpmap = data['newNametoIpmap']
     newNametoOwnermap = data['newNametoOwnermap']
-    
-    response = 'Block received'
-    return response, 200
+    if url is not selfNode.url:
+        newBlock = block(index, previousHash, timestamp, mapHash)
+        selfChain.chain.append(newBlock)
+        selfChain.NametoIpmap = newNametoIpmap
+        selfChain.NametoOwnermap = newNametoOwnermap
+        response = 'Block received'
+        return response, 200
 
-
-
-
-
-
-
-
-
-# if __name__=="__main__":
-#     app.run(port=2020,host="127.0.0.1",debug=True)
+if __name__=="__main__":
+    app.run(port=5000,host="127.0.0.1",debug=True)
