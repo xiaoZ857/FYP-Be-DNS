@@ -129,18 +129,14 @@ def receive_heartbeat():
     if url != selfNode.url:
         if url == selfNode.leader:
             if (height_check and hash_check and term_check):
-                response = {
-                    'heart': 'correct'
-                }
+                response = 'correct'
                 selfNode.received = True
-                return jsonify(response), 200
+                return response, 200
             else:
-                response = {
-                    'heart': 'incorrect'
-                }
+                response = 'incorrect'
                 selfNode.received = True
                 selfNode.recover()
-                return jsonify(response), 200
+                return response, 200
 
 @app.route('/get_chain', methods=['GET'])
 def get_chain():

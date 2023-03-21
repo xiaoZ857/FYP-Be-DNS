@@ -5,6 +5,8 @@ import random
 import threading
 import time
 import requests
+import json
+
 
 NODES = ['127.0.0.1:5000','127.0.0.1:5001','127.0.0.1:5002','127.0.0.1:5003','127.0.0.1:5004']
 
@@ -71,10 +73,12 @@ class blockchain:
         
 
     def queryBinding(self, domainName):
+        # debug 20230321
+        print(self.NametoIpmap, type(self.NametoIpmap))
         if (self.checkVaild == False):
             return 'invaild blockchain log'
-        if (self.NametoIpmap.get(getHash(domainName), 'not exist') == 'not exist'):
-            return 'Corresponding IP address not exist'
+        if self.NametoIpmap.get(getHash(domainName), 'not exist') == 'not exist':
+            return 'Corresponding IP address does not exist'
         return self.NametoIpmap[getHash(domainName)]
 
     def showBlock(self, index):
@@ -208,8 +212,8 @@ class node:
             'timestamp':newblock.timestamp,
             'mapHash':newblock.mapHash,
             'hash':newblock.hash,
-            'newNametoIpmap':newNametoIpmap,
-            'newNametoOwnermap':newNametoOwnermap,
+            'newNametoIpmap': json.dumps(newNametoIpmap),
+            'newNametoOwnermap': json.dumps(newNametoOwnermap),
         }
         for node in self.nodes:
             if node == self.url:

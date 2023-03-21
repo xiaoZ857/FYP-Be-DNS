@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, url_for, jsonify
+import json
 from blockchain import*
 
 app = Flask(__name__, template_folder = 'templates',static_folder='static',static_url_path='')
@@ -129,18 +130,14 @@ def receive_heartbeat():
     if url != selfNode.url:
         if url == selfNode.leader:
             if (height_check and hash_check and term_check):
-                response = {
-                    'heart': 'correct'
-                }
+                response = 'correct'
                 selfNode.received = True
-                return jsonify(response), 200
+                return response, 200
             else:
-                response = {
-                    'heart': 'incorrect'
-                }
+                response = 'incorrect'
                 selfNode.received = True
                 selfNode.recover()
-                return jsonify(response), 200
+                return response, 200
 
 @app.route('/get_chain', methods=['GET'])
 def get_chain():
@@ -160,8 +157,8 @@ def receive_block():
     timestamp = request.form.get('timestamp')
     mapHash = request.form.get('mapHash')
     hash = request.form.get('hash')
-    newNametoIpmap = request.form.get('newNametoIpmap')
-    newNametoOwnermap = request.form.get('newNametoOwnermap')
+    newNametoIpmap = json.loads(request.form.get('newNametoIpmap'))
+    newNametoOwnermap = json.loads(request.form.get('newNametoOwnermap'))
     if url != selfNode.url:
         newBlock = block(index, previousHash, timestamp, mapHash)
         if newBlock.hash == hash:
