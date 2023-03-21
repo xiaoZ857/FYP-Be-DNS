@@ -1,3 +1,4 @@
+# Import required libraries
 from dataclasses import dataclass
 from hashlib import sha256
 from datetime import datetime
@@ -7,7 +8,7 @@ import time
 import requests
 import json
 
-
+# Define the list of nodes
 NODES = ['127.0.0.1:5000','127.0.0.1:5001','127.0.0.1:5002','127.0.0.1:5003','127.0.0.1:5004']
 
 def getTime():
@@ -71,7 +72,6 @@ class blockchain:
         else:
             return 'incorrect key or account'
         
-
     def queryBinding(self, domainName):
         # debug 20230321
         print(self.NametoIpmap, type(self.NametoIpmap))
@@ -131,7 +131,6 @@ class node:
         self.timer = threading.Timer(self.timeout, self.runtime)
         self.timer.start()
 
-
     def runtime(self):
         time.sleep(5)
         while True:
@@ -142,7 +141,6 @@ class node:
             elif self.state == 'follower':
                 self.follower()
             time.sleep(1)
-
 
     def start_election(self):
         self.term += 1
@@ -164,7 +162,6 @@ class node:
         else:
             self.state = 'follower'
             
-
     def send_heartbeat(self):
         while self.state == 'leader':
             heart_received = 0
@@ -184,7 +181,6 @@ class node:
 
             if heart_received < self.majority:
                 self.state = 'candidate'
-
 
     def recover(self):
         response = requests.get(f'http://{self.leader}/get_chain')
