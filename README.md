@@ -37,12 +37,6 @@ git clone https://github.com/xiaoZ857/FYP-Be-DNS.git
 
 4. Use the HTML to interact with the network.
 
-## API Endpoints
-
-- `/vote_request`: Initiates a synchronizer election.
-- `/receive_heartbeat`: Receives a heartbeat message from the synchronizer.
-- `/get_chain`: Retrieves the current blockchain from the synchronizer.
-- `/receive_block`: Receives a new block from another node.
 
 ## License
 
