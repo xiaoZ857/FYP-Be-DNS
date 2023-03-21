@@ -29,11 +29,13 @@ git clone https://github.com/xiaoZ857/FYP-Be-DNS.git
 
 ## Usage
 
-1. Start multiple instances of the `node` class with different ports.
+1. Start multiple apps with different ports.
 
 2. Use the provided API endpoints to interact with the blockchain network, such as adding new bindings or querying existing bindings.
 
 3. Monitor the network through the `getData()` method to check the current leader, the height of the blockchain, and the list of nodes.
+
+4. Use the HTML to interact with the network.
 
 ## API Endpoints
 
