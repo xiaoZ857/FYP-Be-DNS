@@ -1,5 +1,5 @@
 # FYP-Be-DNS
-A Blockchain-based Domain Name System for Private Network using Raft(SyncRaft)
+A Blockchain-based Domain Name System for Private Network using SyncRaft
 
 # SyncRaft Blockchain
 
