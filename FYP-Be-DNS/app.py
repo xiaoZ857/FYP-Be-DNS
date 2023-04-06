@@ -180,6 +180,7 @@ def receive_block():
             selfChain.NametoIpmap = newNametoIpmap
             selfChain.NametoOwnermap = newNametoOwnermap
             response = 'Block received'
+            print('block received')
         else:
             response = 'Block rejected'
         return response, 200
