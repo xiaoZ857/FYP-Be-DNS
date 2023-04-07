@@ -211,7 +211,6 @@ class node:
             'newNametoIpmap': json.dumps(newNametoIpmap),
             'newNametoOwnermap': json.dumps(newNametoOwnermap),
         }
-        print ('broadcasting block')
         for node in self.nodes:
             if node == self.url:
                 continue
